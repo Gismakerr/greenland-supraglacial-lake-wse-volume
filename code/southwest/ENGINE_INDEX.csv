@@ -1,0 +1,19 @@
+public_stage,engine_file,role
+01,01_data_preprocessing_wev.py,S2筛选与指数和云影处理
+02,02_1_extract_lake_aoi_binaries_and_vectors_wev.py,逐景湖泊候选提取
+02,02_2_extract_lake_aoi_composite_and_filtered_wev.py,湖泊合成与过滤
+02,02_3_label_lake_type_arcpy_wev.py,湖泊类型标记
+02,02_4_compute_lake_aspect_ratio.py,长宽比计算
+03,03_generate_and_classify_previews.py,分类预览生成
+03,04_1_segment_masks.py,Otsu分割
+03,04_2_filter_and_classify.py,有效水体分类
+03,04_3_export_effective_boundaries.py,有效边界导出
+04,05_1_build_topology_metrics_from_04_6.py,拓扑构建
+04,05_2_plot_singlebranch_from_05_1_04_6_1.py,分支去噪与关系表
+05,06_1_core.py,SWOT PIXC匹配与提取
+06,06_2_compute_raw_wse_from_06_1.py,湖泊水位计算
+07,06_3_plot_branchwise_red_chain_with_merge_anchor.py,分支水位链构建
+09,09_1_build_lake_observation_status_records_result3.py,观测状态记录
+12,07_4_plot_classification_combined.py,水位分类汇总图
+12,lake_heatmap_project_v3/run_heatmaps_result3_fixed_wp_plotpoints.py,Hovmöller图
+13,06_4_export_all_features_shp_from_classify_plot.py,专题地图属性导出

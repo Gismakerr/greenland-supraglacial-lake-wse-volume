@@ -1,0 +1,13 @@
+{
+  "title": "Greenland supraglacial lake water levels and volumes from SWOT PIXC and Sentinel-2",
+  "date_range": [
+    "2024-06-15",
+    "2024-08-15"
+  ],
+  "wse_units": "m",
+  "regions": [
+    "northeast",
+    "southwest"
+  ],
+  "generated_from": "Figshare canonical tables; no raw satellite data included"
+}

@@ -1,0 +1,10 @@
+cff-version: 1.2.0
+message: "If you use this software or data, please cite the paper and archived dataset."
+title: "Greenland supraglacial lake water levels and volumes from SWOT PIXC and Sentinel-2"
+type: dataset
+authors:
+  - family-names: Cao
+    given-names: Haoyu
+year: 2026
+license: MIT
+repository-code: "https://github.com/Gismakerr/greenland-supraglacial-lake-wse-volume"
