@@ -87,7 +87,8 @@ Counts above are calculated from the released canonical tables. Lake 1 and Lake 
 ├── DATA_SOURCES.md         # source-product access and redistribution notes
 ├── CITATION.cff            # machine-readable citation metadata
 ├── requirements.txt        # core Python dependencies
-└── LICENSE                 # MIT code license
+├── LICENSE                 # MIT code license
+└── LICENSE_DATA.txt        # CC BY 4.0 notice for derived data and figures
 ```
 
 ### Canonical result tables

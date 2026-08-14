@@ -1,0 +1,5 @@
+Creative Commons Attribution 4.0 International (CC BY 4.0).
+
+The derived tables, figures, and lightweight web data in this repository may be shared and adapted with appropriate attribution to the creators, accompanying paper, and archived Figshare record.
+
+Third-party source products are not redistributed and retain their original provider terms.
