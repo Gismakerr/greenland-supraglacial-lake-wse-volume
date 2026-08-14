@@ -1,0 +1,7 @@
+figure_lake_id,original_inventory_id,original_analysis_key,notes
+Lake 1,1,lake1,"Includes the two pre-merge branches and the merged lake stage"
+Lake 2,2,lake2,"Includes the two pre-merge branches and the merged lake stage"
+Lake 3,38,lake38,"Sequential representative-lake label used in the manuscript"
+Lake 4,4,lake4,"Sequential representative-lake label used in the manuscript"
+Lake 5,70,lake70,"Sequential representative-lake label used in the manuscript"
+Lake 6,30,lake30,"Sequential representative-lake label used in the manuscript"

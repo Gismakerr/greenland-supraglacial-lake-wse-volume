@@ -28,6 +28,8 @@ SWOT's Ka-band Radar Interferometer provides two-dimensional, wide-swath elevati
 
 We developed a robust method for constructing supraglacial-lake WSE time series from SWOT PIXC observations by combining radar-quality screening, iterative pixel-level denoising, and temporal-continuity constraints. Same-day ICESat-2 observations from 72 lakes across Greenland show that PIXC-derived WSE has an RMSE of **0.156 m**, substantially lower than the **0.948 m** obtained from the corresponding Raster product. The method produced reliable WSE time series for **360 lakes** in northeastern and southwestern Greenland, retaining approximately 60% of the screened SWOT observations. Mean valid-observation intervals were 2.7 days in the northeast and 3.8 days in the southwest. SWOT also complemented cloud-limited Sentinel-2 area records, adding observation days equivalent to 21.0% and 99.6% of the optical temporal coverage in the two regions. In northeastern Greenland, accepted area–WSE relationships supported near-daily volume-change records for six representative lakes. These records quantify continuous filling, rapid drainage, repeated filling–drainage, and upstream-to-downstream meltwater transfer.
 
+The manuscript and all public-facing figures use the sequential labels **Lake 1–Lake 6**. Original inventory IDs are retained only for reproducibility and are documented in [`results/representative_lake_id_crosswalk.csv`](results/representative_lake_id_crosswalk.csv).
+
 ## Key results
 
 | Result | Value |
@@ -124,6 +126,7 @@ Relative volume change is calculated by integrating the selected area–WSE func
 | `results/lake_attributes_all_regions.csv` | Unified lake inventory, behaviour, WSE range, and observation count | `region`, `lake_id_old` / `lake_id_new` |
 | `results/aicc_model_selection.csv` | Candidate statistics, selected model, coefficients, RMSE, R², and AICc | `fit_unit_id`, `lake_id` |
 | `results/volume_summary.csv` | Reference WSE/area, volume range, rates, dates, and source provenance | `fit_unit_id`, `lake_id` |
+| `results/representative_lake_id_crosswalk.csv` | Public Lake 1–6 labels and original inventory IDs | `figure_lake_id`, `original_inventory_id` |
 
 The larger Figshare package additionally contains intermediate tables, plotting data, vectors, per-step figures, and workflow quicklooks. Raw third-party satellite and DEM products are not redistributed.
 
