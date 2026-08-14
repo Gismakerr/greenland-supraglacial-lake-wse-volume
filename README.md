@@ -7,12 +7,12 @@
 
 **Companion repository for estimating Greenland supraglacial-lake water levels and volumes from SWOT PIXC observations.**
 
-[Interactive lake atlas](https://greenland-ice-lake-atlas-2026.fun-rhino-1925.chatgpt.site/) · [Code guide](code/README.md) · [Final figures](figures/) · [Canonical results](results/) · [Data sources](DATA_SOURCES.md) · [Citation](CITATION.cff)
+[Interactive lake atlas](https://greenland-lake-observatory-2026.yqh11055211.chatgpt.site/) · [Code guide](code/README.md) · [Final figures](figures/) · [Canonical results](results/) · [Data sources](DATA_SOURCES.md) · [Citation](CITATION.cff)
 
 This repository contains the reproducible analysis code, manuscript figures, compact result tables, and web-ready data for a multi-sensor investigation of Greenland supraglacial-lake dynamics using **SWOT PIXC**, **Sentinel-2**, **ICESat-2**, and DEM-derived hydrological information.
 
 <p align="center">
-  <a href="https://greenland-ice-lake-atlas-2026.fun-rhino-1925.chatgpt.site/">
+  <a href="https://greenland-lake-observatory-2026.yqh11055211.chatgpt.site/">
     <img src="figures/Fig03_Spatial_WSE_variability_and_lake_behaviours.png" width="850" alt="Spatial variability of supraglacial-lake water levels and classified lake behaviours in Greenland">
   </a>
   <br><em>Reliable supraglacial-lake WSE variability and seasonal behaviour in northeastern and southwestern Greenland.</em>
@@ -73,21 +73,7 @@ Across the full validation and regional analyses, the study used:
 
 ## Analysis framework
 
-```mermaid
-flowchart LR
-    S2["Sentinel-2 L2A"] --> MASK["Lake masks and area"]
-    PIXC["SWOT PIXC"] --> QC["Radar QC and iterative denoising"]
-    QC --> WSE["Branch-aware WSE time series"]
-    ICESAT["ICESat-2 ATL03 / ATL06"] --> VALIDATE["Independent WSE validation"]
-    WSE --> VALIDATE
-    MASK --> FIT["Linear and quadratic area–WSE candidates"]
-    WSE --> FIT
-    FIT --> AICC["R² > 0.8 and AICc selection"]
-    AICC --> DENSE["Densified WSE and volume change"]
-    DEM["ArcticDEM"] --> HYDRO["Catchments and drainage networks"]
-    HYDRO --> RATE["Catchment-normalized filling / drainage rates"]
-    DENSE --> RATE
-```
+The processing sequence follows the manuscript workflow shown in **Fig. 1** below. No schematic is generated separately for this repository.
 
 ### 1. Sentinel-2 lake mapping
 
@@ -150,7 +136,7 @@ Start with:
 1. [`figures/`](figures/) for the final manuscript figures;
 2. [`figures/figure_captions.csv`](figures/figure_captions.csv) for captions and provenance;
 3. [`results/lake_attributes_all_regions.csv`](results/lake_attributes_all_regions.csv) for the unified lake inventory; and
-4. the [interactive atlas](https://greenland-ice-lake-atlas-2026.fun-rhino-1925.chatgpt.site/) for map-based exploration.
+4. the [interactive atlas](https://greenland-lake-observatory-2026.yqh11055211.chatgpt.site/) for map-based exploration.
 
 ### Option B — analyze the released tables
 
