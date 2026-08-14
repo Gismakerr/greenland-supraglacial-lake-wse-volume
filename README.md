@@ -1,90 +1,129 @@
-# Estimating Greenland supraglacial lake water levels and volumes from SWOT PIXC observations
+# SWOT PIXC enables robust water-level and volume estimation of supraglacial lakes on the Greenland Ice Sheet
 
 ![Python](https://img.shields.io/badge/Python-3.10%2B-3776AB?logo=python&logoColor=white)
 ![Code license](https://img.shields.io/badge/code-MIT-0B6E69)
 ![Data license](https://img.shields.io/badge/derived%20data-CC%20BY%204.0-55A89D)
 ![Status](https://img.shields.io/badge/status-research%20release-E56B5D)
 
-This repository accompanies a study of Greenland supraglacial-lake water-level and volume dynamics using **SWOT PIXC**, **Sentinel-2**, **ICESat-2**, and DEM-derived hydrological information. It provides the ordered analysis code, manuscript figures, compact result tables, and lightweight data used by the interactive lake atlas.
+**Companion repository for estimating Greenland supraglacial-lake water levels and volumes from SWOT PIXC observations.**
+
+[Interactive lake atlas](https://greenland-ice-lake-atlas-2026.fun-rhino-1925.chatgpt.site/) · [Code guide](code/README.md) · [Final figures](figures/) · [Canonical results](results/) · [Data sources](DATA_SOURCES.md) · [Citation](CITATION.cff)
+
+This repository contains the reproducible analysis code, manuscript figures, compact result tables, and web-ready data for a multi-sensor investigation of Greenland supraglacial-lake dynamics using **SWOT PIXC**, **Sentinel-2**, **ICESat-2**, and DEM-derived hydrological information.
 
 <p align="center">
-  <img src="figures/Fig03_Spatial_WSE_variability_and_lake_behaviours.png" width="820" alt="Spatial variability of supraglacial-lake water levels and classified lake behaviours in Greenland">
+  <a href="https://greenland-ice-lake-atlas-2026.fun-rhino-1925.chatgpt.site/">
+    <img src="figures/Fig03_Spatial_WSE_variability_and_lake_behaviours.png" width="850" alt="Spatial variability of supraglacial-lake water levels and classified lake behaviours in Greenland">
+  </a>
+  <br><em>Reliable supraglacial-lake WSE variability and seasonal behaviour in northeastern and southwestern Greenland.</em>
 </p>
 
-## Research overview
+## Why this study matters
 
-Supraglacial lakes store, transfer, and rapidly release meltwater across the Greenland Ice Sheet, but their water-level evolution is difficult to observe consistently with optical imagery alone. This study combines SWOT's pixel-cloud elevations with optical lake-area observations to recover lake water-surface elevation (WSE), characterize filling and drainage behaviour, establish empirical area–WSE relationships, and estimate changes in lake water volume.
+Supraglacial lakes temporarily store large volumes of surface meltwater on the Greenland Ice Sheet. Their filling, connection, and drainage influence surface runoff, meltwater transfer to the ice-sheet bed, and potentially short-term ice dynamics. Yet lake evolution can occur faster than conventional satellite-altimetry repeat cycles, while cloud cover interrupts optical observations.
 
-The workflow:
+SWOT's Ka-band Radar Interferometer provides two-dimensional, wide-swath elevation measurements. This study develops a temporally constrained quality-control framework that turns SWOT pixel-cloud observations into reliable lake water-surface elevation (WSE) time series, combines those elevations with Sentinel-2 lake areas, and extends lake monitoring from **area change** to **water-level and volume change**.
 
-1. extracts and quality-controls SWOT PIXC observations over mapped supraglacial lakes;
-2. constructs branch-aware WSE time series and retains noisy observations for quality-control tracing;
-3. derives Sentinel-2 lake area after spectral-index calculation and cloud screening;
-4. classifies seasonal lake behaviour in northeastern and southwestern Greenland;
-5. selects linear or quadratic area–WSE models using strict AICc selection with \(R^2 > 0.8\);
-6. converts optical area observations to additional WSE and volume estimates; and
-7. relates representative volume changes to DEM-derived catchments and drainage networks.
+## Abstract
 
-<p align="center">
-  <img src="figures/Fig01_Workflow.png" width="700" alt="Study workflow for supraglacial-lake WSE and volume estimation">
-</p>
+We developed a robust method for constructing supraglacial-lake WSE time series from SWOT PIXC observations by combining radar-quality screening, iterative pixel-level denoising, and temporal-continuity constraints. Same-day ICESat-2 observations from 72 lakes across Greenland show that PIXC-derived WSE has an RMSE of **0.156 m**, substantially lower than the **0.948 m** obtained from the corresponding Raster product. The method produced reliable WSE time series for **360 lakes** in northeastern and southwestern Greenland, retaining approximately 60% of the screened SWOT observations. Mean valid-observation intervals were 2.7 days in the northeast and 3.8 days in the southwest. SWOT also complemented cloud-limited Sentinel-2 area records, adding observation days equivalent to 21.0% and 99.6% of the optical temporal coverage in the two regions. In northeastern Greenland, accepted area–WSE relationships supported near-daily volume-change records for six representative lakes. These records quantify continuous filling, rapid drainage, repeated filling–drainage, and upstream-to-downstream meltwater transfer.
 
-## Study at a glance
+## Key results
 
-| Item | Public-release value |
+| Result | Value |
 |---|---:|
-| Lake inventory polygons across both study regions | 2,905 |
-| Reliable WSE curves — Northeast | 150 |
-| Reliable WSE curves — Southwest | 208 |
-| Northeast area–WSE fit units | 83 |
-| Unique lakes with accepted area–WSE models | 79 |
-| Selected linear / quadratic models | 41 / 42 |
-| Main observation season | June–August 2024 |
+| Lakes used for SWOT–ICESat-2 validation | 72 |
+| PIXC WSE RMSE relative to ICESat-2 | **0.156 m** |
+| Raster WSE RMSE relative to ICESat-2 | **0.948 m** |
+| Reliable regional WSE time series | **360** |
+| Northeast / Southwest time series | **152 / 208** |
+| SWOT observations retained after screening | ~60% |
+| Mean valid-observation interval, Northeast / Southwest | **2.7 / 3.8 days** |
+| Additional observation-day coverage relative to S2, Northeast / Southwest | **21.0% / 99.6%** |
+| Accepted Northeast area–WSE fit units | **83** |
+| Linear / quadratic AICc-selected models | **41 / 42** |
+| WSE records after S2-area conversion | **1,773 → 2,163** (+390; 22.0%) |
+| Representative volume-series interval | ~1 day |
+| Relative volume uncertainty for representative lakes | **2.8%–11.9%** |
 
-Counts above are calculated from the released canonical tables. Lake 1 and Lake 2 contain branch-aware pre-merger and post-merger units, so the number of fit units is larger than the number of unique lakes.
+### Hydrological interpretation
 
-## Main scientific outputs
+- Lake 2's infilling rate increased from **0.22 to 0.50 × 10⁶ m³ d⁻¹** after it began receiving upstream water from Lake 3.
+- Lake 3 drained at **2.3 times** its preceding infilling rate.
+- Lakes 5 and 6 drained at **2.7 and 11.9 times** their respective infilling rates.
+- Lake 6 lost **1.79 × 10⁶ m³** between two consecutive daily observations.
+- Catchment-normalized infilling rates were approximately twice as high for lakes receiving upstream contributions, demonstrating the importance of inter-lake hydrological connectivity.
 
-- **WSE retrieval and validation** — SWOT PIXC and Raster elevations are evaluated against ICESat-2 observations.
-- **Seasonal lake dynamics** — reliable WSE curves reveal continuous filling, repeated filling–drainage, slow drainage, and rapid drainage behaviours.
-- **Cloud-gap observations** — SWOT supplies water-level information on dates when optical lake-area retrieval is unavailable or cloud affected.
-- **Area–WSE modelling** — AICc is used consistently to select linear or quadratic relationships for accepted lakes.
-- **Volume-change estimation** — final area–WSE models and reference water levels are used to derive water-volume time series and their uncertainties.
-- **Hydrological context** — DEM-derived catchments, surface drainage networks, and catchment-normalized rates place lake changes in their upstream meltwater context.
+> **Counting note.** The manuscript reports 83 accepted area–WSE lake fits. The public `aicc_model_selection.csv` stores 83 fit units associated with 79 unique lake IDs because Lakes 1 and 2 are explicitly separated into pre-merger branch units and post-merger units.
 
-<table>
-  <tr>
-    <td width="50%"><img src="figures/Fig04_Northeastern_Greenland_relative_WSE_curves.png" alt="Northeastern Greenland relative WSE curves"></td>
-    <td width="50%"><img src="figures/Fig05_Southwestern_Greenland_relative_WSE_curves.png" alt="Southwestern Greenland relative WSE curves"></td>
-  </tr>
-  <tr>
-    <td align="center"><b>Northeastern Greenland</b></td>
-    <td align="center"><b>Southwestern Greenland</b></td>
-  </tr>
-</table>
+## Study regions and observations
+
+| Region | Approximate latitude | 2024 analysis period | S2 scenes used for regional dynamics | Reliable WSE series | Mean valid interval |
+|---|---:|---|---:|---:|---:|
+| Northeast, near Kofoed-Hansen Bræ | 77.4–78.0°N | 15 June–15 August | 85 | 152 | 2.7 d |
+| Southwest, near Russell Glacier | 66.6–67.6°N | 1 June–15 August | 35 | 208 | 3.8 d |
+
+Across the full validation and regional analyses, the study used:
+
+- **261** SWOT Level-2 High-Rate PIXC granules;
+- **18** SWOT Level-2 High-Rate Raster products at 100 m resolution;
+- **153** Sentinel-2 Level-2A surface-reflectance scenes;
+- **29** ICESat-2 ATL03 granules and **13** ATL06 granules; and
+- ArcticDEM-derived elevation, catchment, contour, and drainage-network information.
+
+## Analysis framework
+
+```mermaid
+flowchart LR
+    S2["Sentinel-2 L2A"] --> MASK["Lake masks and area"]
+    PIXC["SWOT PIXC"] --> QC["Radar QC and iterative denoising"]
+    QC --> WSE["Branch-aware WSE time series"]
+    ICESAT["ICESat-2 ATL03 / ATL06"] --> VALIDATE["Independent WSE validation"]
+    WSE --> VALIDATE
+    MASK --> FIT["Linear and quadratic area–WSE candidates"]
+    WSE --> FIT
+    FIT --> AICC["R² > 0.8 and AICc selection"]
+    AICC --> DENSE["Densified WSE and volume change"]
+    DEM["ArcticDEM"] --> HYDRO["Catchments and drainage networks"]
+    HYDRO --> RATE["Catchment-normalized filling / drainage rates"]
+    DENSE --> RATE
+```
+
+### 1. Sentinel-2 lake mapping
+
+Sentinel-2 imagery is used to derive maximum lake extents and time-varying lake areas. Spectral water indices, adaptive lake buffers, cloud screening, and Otsu thresholding are combined to delineate valid water bodies. Lakes smaller than 0.0625 km² are excluded from the inventory used for SWOT analysis, and an extraction boundary larger than 0.04 km² is required to provide a sufficient PIXC sample.
+
+### 2. SWOT PIXC quality control
+
+The workflow retains PIXC water classes 3–6 and screens observations using product quality flags, coherence, sigma0, and cross-track distance. Pixel elevations are iteratively filtered at two standard deviations until the within-lake standard deviation falls below 0.5 m or ten iterations are reached.
+
+### 3. Temporally constrained WSE construction
+
+Adjacent observations are linked when their WSE difference is below 1.5 m, with one anomalous observation allowed to be skipped. Endpoint, local peak, and local trough tests remove implausible jumps, including phase-unwrapping errors of tens of metres. Only time series with at least five valid observations are retained.
+
+### 4. Area–WSE model selection
+
+Same-day S2 area and SWOT WSE observations are matched, with isolated one-day area gaps optionally interpolated. Lakes require at least four matched observations. Linear and quadratic candidates are compared using corrected Akaike information criterion (AICc), and only candidates with R² > 0.8 are eligible.
+
+### 5. Volume and hydrological context
+
+Relative volume change is calculated by integrating the selected area–WSE function from a reference water level. For representative lakes, DEM-derived catchments and flow networks are used to express filling and drainage rates both as water volume and as catchment-normalized runoff depth.
 
 <p align="center">
-  <img src="figures/Fig08_Representative_DEM_catchments_and_drainage_networks.png" width="820" alt="Representative lake catchments and drainage networks">
-  <br><b>Representative DEM-derived catchments and drainage networks</b>
+  <img src="figures/Fig01_Workflow.png" width="720" alt="Study workflow for supraglacial-lake WSE and volume estimation">
 </p>
-
-<details>
-<summary><b>View the representative area–WSE relationships and water-frequency panels</b></summary>
-<br>
-<p align="center"><img src="figures/Fig07_Representative_lake_WSE_area_WSE_fits_and_water_frequency.png" width="700" alt="Representative WSE and area-WSE models"></p>
-</details>
 
 ## Repository contents
 
 ```text
 .
 ├── code/
-│   ├── northeast/          # ordered Northeast workflow, including AICc fits and volume estimation
-│   └── southwest/          # ordered Southwest workflow; intentionally ends before unavailable products
+│   ├── northeast/          # complete ordered workflow, including AICc fitting and volume estimation
+│   └── southwest/          # ordered workflow through WSE/statistical products
 ├── figures/                # final manuscript and supplementary PNG figures
 ├── results/                # canonical compact CSV result tables
-├── web_data/               # lightweight data prepared for the interactive atlas
-├── DATA_SOURCES.md         # source-product access and redistribution notes
+├── web_data/               # lightweight data used by the interactive atlas
+├── DATA_SOURCES.md         # official source-product and redistribution notes
 ├── CITATION.cff            # machine-readable citation metadata
 ├── requirements.txt        # core Python dependencies
 ├── LICENSE                 # MIT code license
@@ -93,53 +132,149 @@ Counts above are calculated from the released canonical tables. Lake 1 and Lake 
 
 ### Canonical result tables
 
-| File | Description |
-|---|---|
-| `results/final_wse_branch_timeseries.csv` | Branch-aware WSE observations, uncertainty, noise flags, and dates for both regions |
-| `results/lake_attributes_all_regions.csv` | Unified lake inventory, region, behaviour class, WSE range, and observation counts |
-| `results/aicc_model_selection.csv` | Linear and quadratic candidate statistics and the final AICc-selected model |
-| `results/volume_summary.csv` | Reference levels, volume ranges, rates, model provenance, and observation periods |
+| File | Content | Typical join keys |
+|---|---|---|
+| `results/final_wse_branch_timeseries.csv` | Date, WSE, WSE uncertainty, branch, point color, noise status, and noise reason | `region`, `lake_id`, `branch_index`, `date` |
+| `results/lake_attributes_all_regions.csv` | Unified lake inventory, behaviour, WSE range, and observation count | `region`, `lake_id_old` / `lake_id_new` |
+| `results/aicc_model_selection.csv` | Candidate statistics, selected model, coefficients, RMSE, R², and AICc | `fit_unit_id`, `lake_id` |
+| `results/volume_summary.csv` | Reference WSE/area, volume range, rates, dates, and source provenance | `fit_unit_id`, `lake_id` |
 
-## Reproducing the workflow
+The larger Figshare package additionally contains intermediate tables, plotting data, vectors, per-step figures, and workflow quicklooks. Raw third-party satellite and DEM products are not redistributed.
 
-Create an isolated Python environment and install the public dependencies:
+## How to use this repository
+
+### Option A — inspect the research outputs
+
+Start with:
+
+1. [`figures/`](figures/) for the final manuscript figures;
+2. [`figures/figure_captions.csv`](figures/figure_captions.csv) for captions and provenance;
+3. [`results/lake_attributes_all_regions.csv`](results/lake_attributes_all_regions.csv) for the unified lake inventory; and
+4. the [interactive atlas](https://greenland-ice-lake-atlas-2026.fun-rhino-1925.chatgpt.site/) for map-based exploration.
+
+### Option B — analyze the released tables
+
+```python
+import pandas as pd
+
+wse = pd.read_csv(
+    "results/final_wse_branch_timeseries.csv",
+    parse_dates=["date"],
+)
+
+# Valid observations for Lake 5 in northeastern Greenland
+lake5 = wse[
+    (wse["region"] == "northeast")
+    & (wse["lake_id"].astype(str) == "5")
+    & (~wse["is_noise"].astype(str).str.lower().eq("true"))
+].sort_values("date")
+
+print(lake5[["date", "wse_m", "wse_std", "branch_index"]])
+```
+
+To inspect the selected area–WSE models:
+
+```python
+fits = pd.read_csv("results/aicc_model_selection.csv")
+print(fits["selected_model"].value_counts())
+print(fits[["fit_unit_id", "selected_model", "selected_r2", "selected_rmse"]])
+```
+
+### Option C — rerun the workflow
 
 ```bash
+git clone https://github.com/Gismakerr/greenland-supraglacial-lake-wse-volume.git
+cd greenland-supraglacial-lake-wse-volume
+
 python -m venv .venv
 # Windows: .venv\Scripts\activate
 # Linux/macOS: source .venv/bin/activate
+
 python -m pip install --upgrade pip
 python -m pip install -r requirements.txt
 ```
 
-Scripts are numbered in execution order. Read [`code/README.md`](code/README.md) and the regional README before running them. Public scripts default to validation or dry-run behaviour where implemented; use `--run` only after configuring local paths to the required external source products.
+Scripts are numbered in execution order. Read [`code/README.md`](code/README.md) and each regional README before running them. Public entry points use validation or dry-run behaviour where implemented; use `--run` only after configuring paths to the required external source products.
 
-Some geospatial steps additionally require a working GDAL/PROJ stack. DEM hydrology scripts that use ArcPy require ArcGIS Pro, Spatial Analyst, and a compatible Python environment.
+Some geospatial steps require a working GDAL/PROJ stack. DEM hydrology scripts using ArcPy require ArcGIS Pro, Spatial Analyst, and a compatible Python environment.
 
-## Source data and redistribution
+## Figure gallery
 
-Raw Sentinel-2 imagery, SWOT PIXC/SLC/Raster products, ICESat-2 files, and DEM rasters are **not redistributed** in this repository. They remain available from their official providers:
+<table>
+  <tr>
+    <td width="50%"><img src="figures/Fig04_Northeastern_Greenland_relative_WSE_curves.png" alt="Northeastern Greenland relative WSE curves"></td>
+    <td width="50%"><img src="figures/Fig05_Southwestern_Greenland_relative_WSE_curves.png" alt="Southwestern Greenland relative WSE curves"></td>
+  </tr>
+  <tr>
+    <td align="center"><b>Northeastern Greenland WSE dynamics</b></td>
+    <td align="center"><b>Southwestern Greenland WSE dynamics</b></td>
+  </tr>
+</table>
 
-- Sentinel-2: Copernicus Data Space Ecosystem / Google Earth Engine
-- SWOT PIXC, Raster, and SLC: NASA/JPL PO.DAAC
-- ICESat-2 ATL03 and ATL06: NASA NSIDC DAAC
-- ArcticDEM: Polar Geospatial Center
+<p align="center">
+  <img src="figures/Fig08_Representative_DEM_catchments_and_drainage_networks.png" width="840" alt="Representative lake catchments and drainage networks">
+  <br><b>Representative DEM-derived catchments and drainage networks</b>
+</p>
 
-See [`DATA_SOURCES.md`](DATA_SOURCES.md) for the complete source-data statement. The larger derived-data package—containing intermediate tables, vectors, plotting data, and workflow quicklooks—is prepared separately for Figshare.
+<p align="center">
+  <img src="figures/Fig09_Representative_lake_volume_change_and_catchment_normalized_rates.png" width="840" alt="Representative lake volume change and catchment-normalized rates">
+  <br><b>Near-daily volume change and catchment-normalized filling/drainage rates</b>
+</p>
 
-## Figures
+<details>
+<summary><b>View representative area–WSE relationships and water-frequency panels</b></summary>
+<br>
+<p align="center"><img src="figures/Fig07_Representative_lake_WSE_area_WSE_fits_and_water_frequency.png" width="700" alt="Representative WSE and area-WSE models"></p>
+</details>
 
-The `figures` directory contains the final PNG figures using manuscript numbering. Figure captions and file provenance are listed in [`figures/figure_captions.csv`](figures/figure_captions.csv). TIFF files, candidate figures, backups, and test outputs are intentionally excluded.
+All final figures are PNG files. Candidate plots, test figures, TIFF duplicates, backups, and internal-only diagnostics are intentionally excluded from the GitHub release.
+
+## External source data
+
+Raw source products are publicly available from their official archives but are **not redistributed** here:
+
+- [Sentinel-2 Surface Reflectance Harmonized](https://developers.google.com/earth-engine/datasets/catalog/COPERNICUS_S2_SR_HARMONIZED) — Copernicus / Google Earth Engine
+- [SWOT Level-2 High-Rate PIXC](https://podaac.jpl.nasa.gov/dataset/SWOT_L2_HR_PIXC_2.0) — NASA/JPL PO.DAAC
+- [SWOT Level-2 High-Rate Raster](https://podaac.jpl.nasa.gov/dataset/SWOT_L2_HR_Raster_2.0) — NASA/JPL PO.DAAC
+- [ICESat-2 ATL03](https://nsidc.org/data/atl03) and [ATL06](https://nsidc.org/data/atl06) — NASA NSIDC DAAC
+- [ArcticDEM](https://www.pgc.umn.edu/data/arcticdem/) — Polar Geospatial Center
+
+See [`DATA_SOURCES.md`](DATA_SOURCES.md) for the redistribution statement. Rebuilding the complete workflow requires users to download these products independently and preserve the providers' original terms and metadata.
+
+## Scope and limitations
+
+- SWOT and Sentinel-2 observations on the same date are not simultaneous: SWOT generally overpassed during the local morning, while Sentinel-2 observations occurred in the afternoon.
+- WSE continuity screening uses empirical but sensitivity-tested thresholds. Alternative parameter combinations produced 150–156 reliable Northeast time series, indicating limited sensitivity in the reported counts.
+- Relative volume is referenced to the first valid paired WSE–area observation; absolute initial lake volume is not estimated.
+- Lake-bottom melt and time-varying basin geometry are not explicitly modelled.
+- Area–WSE relationships should be refitted when lake merging or separation changes lake geometry.
+- The Southwest workflow intentionally does not contain area–WSE fitting or volume products because those analyses were not produced for that region.
+
+## Reproducibility and release policy
+
+This repository is the concise GitHub-facing release. It prioritizes final figures, canonical tables, readable entry points, and lightweight web data. The companion Figshare package is designed for deeper reuse and contains additional derived intermediate products. Raw Sentinel-2, SWOT, ICESat-2, and DEM files remain with their official providers.
+
+The release keeps separate:
+
+- **source observations** — externally hosted and not redistributed;
+- **derived scientific data** — archived for reuse under CC BY 4.0;
+- **analysis code** — released under MIT; and
+- **internal working files** — candidates, backups, caches, and local path configurations that are not public.
 
 ## Citation
 
-If you use the code, derived tables, or figures, please cite the accompanying paper and archived Figshare dataset. Citation metadata are provided in [`CITATION.cff`](CITATION.cff). The Figshare DOI will be added when the data record is publicly assigned.
+If you use the code, derived tables, or figures, please cite the accompanying manuscript and Figshare dataset. Machine-readable metadata are provided in [`CITATION.cff`](CITATION.cff). The Figshare DOI will be added when the data record is assigned.
+
+```text
+Cao, H. (2026). SWOT PIXC enables robust water-level and volume estimation
+of supraglacial lakes on the Greenland Ice Sheet. Research software and data release.
+```
 
 ## License
 
-- **Code:** MIT License
-- **Derived data and figures:** CC BY 4.0, subject to the terms of the original data providers
+- **Code:** [MIT License](LICENSE)
+- **Derived data and figures:** [CC BY 4.0](LICENSE_DATA.txt), subject to the original providers' terms
 
-## Contact
+## Contact and feedback
 
-For questions about the workflow or released data, please open a GitHub issue. The project is maintained by **Haoyu Cao**.
+The project is maintained by **Haoyu Cao**. Questions, reproducibility reports, and suggestions are welcome through [GitHub Issues](https://github.com/Gismakerr/greenland-supraglacial-lake-wse-volume/issues).

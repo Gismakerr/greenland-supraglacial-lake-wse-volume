@@ -1,6 +1,6 @@
 cff-version: 1.2.0
 message: "If you use this software or data, please cite the paper and archived dataset."
-title: "Greenland supraglacial lake water levels and volumes from SWOT PIXC and Sentinel-2"
+title: "SWOT PIXC enables robust water-level and volume estimation of supraglacial lakes on the Greenland Ice Sheet"
 type: dataset
 authors:
   - family-names: Cao
