@@ -4,10 +4,11 @@
 ![Code license](https://img.shields.io/badge/code-MIT-0B6E69)
 ![Data license](https://img.shields.io/badge/derived%20data-CC%20BY%204.0-55A89D)
 ![Status](https://img.shields.io/badge/status-research%20release-E56B5D)
+[![Figshare DOI](https://img.shields.io/badge/Figshare-10.6084%2Fm9.figshare.33261114-1F9E89)](https://doi.org/10.6084/m9.figshare.33261114)
 
 **Companion repository for estimating Greenland supraglacial-lake water levels and volumes from SWOT PIXC observations.**
 
-[Interactive lake atlas](https://greenland-lake-observatory-2026.yqh11055211.chatgpt.site/) · [Code guide](code/README.md) · [Final figures](figures/) · [Canonical results](results/) · [Data sources](DATA_SOURCES.md) · [Citation](CITATION.cff)
+[Interactive lake atlas](https://greenland-lake-observatory-2026.yqh11055211.chatgpt.site/) · [Figshare data archive](https://doi.org/10.6084/m9.figshare.33261114) · [Code guide](code/README.md) · [Final figures](figures/) · [Canonical results](results/) · [Data sources](DATA_SOURCES.md) · [Citation](CITATION.cff)
 
 This repository contains the reproducible analysis code, manuscript figures, compact result tables, and web-ready data for a multi-sensor investigation of Greenland supraglacial-lake dynamics using **SWOT PIXC**, **Sentinel-2**, **ICESat-2**, and DEM-derived hydrological information.
 
@@ -252,7 +253,7 @@ The release keeps separate:
 
 ## Citation
 
-If you use the code, derived tables, or figures, please cite the accompanying manuscript and Figshare dataset. Machine-readable metadata are provided in [`CITATION.cff`](CITATION.cff). The Figshare DOI will be added when the data record is assigned.
+If you use the code, derived tables, or figures, please cite the accompanying manuscript and the [Figshare dataset (DOI: 10.6084/m9.figshare.33261114)](https://doi.org/10.6084/m9.figshare.33261114). Machine-readable metadata are provided in [`CITATION.cff`](CITATION.cff).
 
 ```text
 Cao, H. (2026). SWOT PIXC enables robust water-level and volume estimation
