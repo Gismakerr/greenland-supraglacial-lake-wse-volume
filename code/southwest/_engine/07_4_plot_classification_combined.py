@@ -84,12 +84,9 @@ def style_curve_axes(
             ax.set_xlabel("")
         else:
             ax.set_xlabel(base.CURVE_X_LABEL_TEXT, fontsize=base.CURVE_AXIS_LABEL_FONT_SIZE)
-        if base.CURVE_USE_BROKEN_Y_AXIS and ax_top is not None:
-            ax.set_ylabel("")
+        ax.set_ylabel("")
+        if ax_top is not None:
             ax_top.set_ylabel("")
-            fig.supylabel("Relative WSE time series", fontsize=base.CURVE_AXIS_LABEL_FONT_SIZE, x=0.04)
-        else:
-            ax.set_ylabel("Relative WSE time series", fontsize=base.CURVE_AXIS_LABEL_FONT_SIZE)
     else:
         ax.set_xlabel("")
         ax.set_ylabel("")
@@ -315,13 +312,13 @@ def plot_same_color_panel(
     if show_legend and base.CURVE_SHOW_LEGEND and legend_source:
         handles, labels = base.build_category_legend_handles_labels(legend_source, out_path_for_labels)
         if handles:
-            target_ax = ax
-            bbox_anchor = base.CURVE_LEGEND_BBOX_TO_ANCHOR_BROKEN if ax_top is not None else base.CURVE_LEGEND_BBOX_TO_ANCHOR
-            target_ax.legend(
+            target_ax = ax_top if ax_top is not None else ax
+            fig.legend(
                 handles,
                 labels,
                 loc=base.CURVE_LEGEND_LOC,
-                bbox_to_anchor=(0.04, bbox_anchor[1]),
+                bbox_to_anchor=(0.04, 0.98),
+                bbox_transform=target_ax.transAxes,
                 fontsize=base.CURVE_LEGEND_FONT_SIZE,
                 frameon=True,
                 facecolor=base.CURVE_LEGEND_FACE_COLOR,
@@ -540,7 +537,8 @@ def run_for_method_combined(method_paths: Dict[str, str], elev_map: Dict[int, fl
         panel_label="(b)",
     )
 
-    fig.subplots_adjust(left=0.09, right=0.99, top=0.985, bottom=0.07)
+    fig.supylabel("Relative WSE time series", fontsize=base.CURVE_AXIS_LABEL_FONT_SIZE, x=0.06, y=0.55)
+    fig.subplots_adjust(left=0.12, right=0.99, top=0.985, bottom=0.12)
     out_path = Path(method_paths["plot_dir"]) / "GroupPlot_RelWSE_Combined_TopSummary_BottomAllCurves.png"
     out_path.parent.mkdir(parents=True, exist_ok=True)
     fig.savefig(out_path, dpi=base.CURVE_DPI)

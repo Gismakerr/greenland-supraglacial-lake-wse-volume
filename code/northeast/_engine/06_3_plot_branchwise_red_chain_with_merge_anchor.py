@@ -26,7 +26,7 @@ SCRIPT_DIR = Path(__file__).resolve().parent
 BASE_SCRIPT_PATH = SCRIPT_DIR / "copy_code" / "06_2_plot_single_red_chain_with_uncertainty.py"
 
 TARGET_SIZE_CATEGORIES = []
-EXCLUDED_LAKE_IDS = {115, 124, 168, 180, 184}
+#EXCLUDED_LAKE_IDS = {115, 124, 168, 180, 184}
 # Hard exclusion at branch level: these branches are skipped entirely in 06_3 outputs.
 EXCLUDED_LAKE_BRANCHES = {
     (177, 1),

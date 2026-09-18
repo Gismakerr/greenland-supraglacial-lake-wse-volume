@@ -124,7 +124,7 @@ CATEGORY_PLOT_SETTINGS = {
     },
     "sudden_drainage": {
         "label": "Sudden Drainage",
-        "color": "#2F78C4",
+        "color": "#FF0000",
         "top_n": 2,
         "manual_branch_pairs": [(79, 1), (123, 1)],
     },
@@ -253,8 +253,8 @@ CURVE_X_TICK_START = "2024-06-05"
 CURVE_X_TICK_DATE_FORMAT = "%m-%d"
 CURVE_X_TICK_ROTATION = 0
 CURVE_TITLE_FONT_SIZE = 14
-CURVE_AXIS_LABEL_FONT_SIZE = 24
-CURVE_TICK_FONT_SIZE = 24
+CURVE_AXIS_LABEL_FONT_SIZE = 36
+CURVE_TICK_FONT_SIZE = 36
 CURVE_TICK_MARK_LENGTH = 8
 CURVE_TICK_MARK_WIDTH = 1
 CURVE_COUNT_TEXT_FONT_SIZE = 12
@@ -275,10 +275,10 @@ CURVE_SPINE_LINEWIDTH = 1.2
 CURVE_COUNT_BOX_ALPHA = 0.8
 CURVE_SHOW_LEGEND = True
 CURVE_EXPORT_STANDALONE_LEGEND = True
-CURVE_LEGEND_FONT_SIZE = CURVE_TICK_FONT_SIZE
+CURVE_LEGEND_FONT_SIZE = 24
 CURVE_LEGEND_LOC = "upper left"
-CURVE_LEGEND_BBOX_TO_ANCHOR = (0.01, 0.98)
-CURVE_LEGEND_BBOX_TO_ANCHOR_BROKEN = (0.015, 1.2)
+CURVE_LEGEND_BBOX_TO_ANCHOR = (0.04, 0.97)
+CURVE_LEGEND_BBOX_TO_ANCHOR_BROKEN = (0.04, 1.0)
 CURVE_LEGEND_FACE_COLOR = "none"
 CURVE_LEGEND_EDGE_COLOR = "none"
 CURVE_LEGEND_FRAME_ALPHA = 0.0
@@ -919,19 +919,11 @@ def apply_broken_y_axis_format(ax_top, ax_bottom):
     ax_bottom.set_ylim(y_min, float(CURVE_BROKEN_Y_LOWER_MAX))
     ax_top.set_ylim(float(CURVE_BROKEN_Y_UPPER_MIN), y_max)
 
-    # Hide touching spines and add break marks.
+    # Hide touching spines; the axis gap alone indicates the truncation.
     ax_top.spines["bottom"].set_visible(False)
     ax_bottom.spines["top"].set_visible(False)
-    ax_top.tick_params(labeltop=False, bottom=False)
+    ax_top.tick_params(axis="x", top=False, bottom=False, labeltop=False, labelbottom=False)
     ax_bottom.xaxis.tick_bottom()
-
-    d = 0.008
-    kwargs = dict(transform=ax_top.transAxes, color=CURVE_SPINE_COLOR, clip_on=False, linewidth=CURVE_SPINE_LINEWIDTH)
-    ax_top.plot((-d, +d), (-d, +d), **kwargs)
-    ax_top.plot((1 - d, 1 + d), (-d, +d), **kwargs)
-    kwargs.update(transform=ax_bottom.transAxes)
-    ax_bottom.plot((-d, +d), (1 - d, 1 + d), **kwargs)
-    ax_bottom.plot((1 - d, 1 + d), (1 - d, 1 + d), **kwargs)
 
     lower_ticks = [
         v

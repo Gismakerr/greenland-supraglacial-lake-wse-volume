@@ -13,6 +13,7 @@ import matplotlib
 matplotlib.use("Agg")
 import matplotlib.dates as mdates
 import matplotlib.pyplot as plt
+from matplotlib.ticker import FormatStrFormatter
 
 
 ROOT = Path(__file__).resolve().parent.parent
@@ -29,13 +30,15 @@ NO_BUFFER_BASIN_CSV = INPUT_ROOT / "six_lake_buffer_sensitivity_10m.csv"
 
 DPI = 300
 # Keep the 07_3 look, but slightly taller so the row is less flattened.
-FIGSIZE = (17.0, 4.10)
+FIGSIZE = (17.0, 5.10)
 
 FONT_FAMILY = "Arial"
 LABEL_SIZE = 20
-AXIS_LABEL_SIZE = 16
+AXIS_LABEL_SIZE = 24
+DATE_LABEL_SIZE = 30
+UNIT_LABEL_SIZE = 18
 LEGEND_SIZE = 14
-TICK_SIZE = 18
+TICK_SIZE = 27
 SPINE_WIDTH = 1.35
 TICK_WIDTH = 1.35
 TICK_LENGTH = 8
@@ -53,7 +56,7 @@ FIT_ANNOTATION_HALF_SPACING = 0.85
 RUNOFF_MM_PER_1E6M3_PER_KM2 = 1000.0
 LEFT_LABEL_TEXT = r"$10^6$ m$^3$"
 RIGHT_UNIT_TEXT = "mm"
-LEFT_AXIS_LABEL = "Water volume change"
+LEFT_AXIS_LABEL = "SGL storage variation"
 RIGHT_AXIS_LABEL = "Cumulative runoff"
 RATE_LABEL_STYLE = "parallel"
 
@@ -252,6 +255,12 @@ def nice_runoff_axis(values: np.ndarray) -> tuple[float, float, np.ndarray]:
         top = step * 4
         ticks = np.arange(0.0, top + step * 0.5, step)
     return float(-0.04 * top), float(top), ticks
+
+
+def sparse_axis_ticks(ticks: np.ndarray) -> np.ndarray:
+    """Reduce dense y tick labels while retaining the existing axis limits."""
+    ticks = np.asarray(ticks, dtype=float)
+    return ticks[::2] if ticks.size > 4 else ticks
 
 
 def volume_to_runoff_mm(volume_1e6_m3: np.ndarray | float, basin_area_km2: float) -> np.ndarray | float:
@@ -614,19 +623,21 @@ def setup_dual_axes(
 ) -> tuple[plt.Axes, plt.Axes]:
     """Plot volume on the left and equivalent water depth on the right."""
     ax_left.set_ylim(volume_ymin, volume_ymax)
-    ax_left.set_yticks(volume_yticks)
+    ax_left.set_yticks(sparse_axis_ticks(volume_yticks))
+    ax_left.yaxis.set_major_formatter(FormatStrFormatter("%.1f"))
     ax_left.yaxis.set_label_position("left")
     ax_left.yaxis.tick_left()
     ax_left.spines["right"].set_visible(False)
     ax_left.tick_params(axis="y", labelsize=TICK_SIZE, width=TICK_WIDTH, length=TICK_LENGTH, pad=5)
     ax_left.set_ylabel(LEFT_AXIS_LABEL, fontsize=AXIS_LABEL_SIZE, fontweight="bold", labelpad=10)
-    ax_left.text(-0.005, 1.015, LEFT_LABEL_TEXT, transform=ax_left.transAxes, ha="left", va="bottom", fontsize=TICK_SIZE)
+    ax_left.yaxis.set_label_coords(-0.085, 0.5)
+    ax_left.text(-0.005, 1.015, LEFT_LABEL_TEXT, transform=ax_left.transAxes, ha="left", va="bottom", fontsize=UNIT_LABEL_SIZE)
 
     runoff_limits = volume_to_runoff_mm(np.array([volume_ymin, volume_ymax]), basin_area_km2)
     runoff_ymin, runoff_ymax, runoff_yticks = nice_runoff_axis(runoff_limits)
     ax_right = ax_left.twinx()
     ax_right.set_ylim(runoff_ymin, runoff_ymax)
-    ax_right.set_yticks(runoff_yticks)
+    ax_right.set_yticks(sparse_axis_ticks(runoff_yticks))
     ax_right.yaxis.tick_right()
     ax_right.yaxis.set_label_position("right")
     ax_right.spines["left"].set_visible(False)
@@ -654,7 +665,7 @@ def setup_dual_axes(
         transform=ax_right.transAxes,
         ha="right",
         va="bottom",
-        fontsize=TICK_SIZE,
+        fontsize=UNIT_LABEL_SIZE,
         color=runoff_color,
     )
     return ax_left, ax_right
@@ -736,17 +747,26 @@ def draw_single_lake(lake: dict, df: pd.DataFrame) -> None:
     ax.set_xlim(X_MIN, X_MAX)
     ax.set_xticks(X_TICKS)
     ax.xaxis.set_major_formatter(mdates.DateFormatter("%m-%d"))
-    ax.tick_params(axis="x", labelsize=TICK_SIZE, width=TICK_WIDTH, length=TICK_LENGTH, pad=5)
+    show_date_labels = int(lake["lake_id"]) == 30
+    ax.tick_params(
+        axis="x",
+        labelsize=TICK_SIZE,
+        width=TICK_WIDTH,
+        length=TICK_LENGTH,
+        pad=5,
+        labelbottom=show_date_labels,
+    )
+    ax_runoff.tick_params(axis="x", labelbottom=False)
     ax.grid(False)
     ax.set_xlabel(
         "Date" if int(lake["lake_id"]) == 30 else "",
-        fontsize=LABEL_SIZE,
+        fontsize=DATE_LABEL_SIZE,
         fontweight="bold",
         labelpad=8,
     )
     ax_runoff.grid(False)
 
-    fig.subplots_adjust(left=0.11, right=0.90, bottom=0.22, top=0.92)
+    fig.subplots_adjust(left=0.12, right=0.86, bottom=0.24, top=0.86)
     out_png = OUT_DIR / f"{lake['out_name']}.png"
     out_tif = OUT_DIR / f"{lake['out_name']}.tif"
     fig.savefig(out_png, dpi=DPI)
@@ -843,7 +863,15 @@ def draw_stacked_lake(lake: dict, df: pd.DataFrame) -> None:
     ax.set_xlim(X_MIN, X_MAX)
     ax.set_xticks(X_TICKS)
     ax.xaxis.set_major_formatter(mdates.DateFormatter("%m-%d"))
-    ax.tick_params(axis="x", labelsize=TICK_SIZE, width=TICK_WIDTH, length=TICK_LENGTH, pad=5)
+    ax.tick_params(
+        axis="x",
+        labelsize=TICK_SIZE,
+        width=TICK_WIDTH,
+        length=TICK_LENGTH,
+        pad=5,
+        labelbottom=False,
+    )
+    ax_runoff.tick_params(axis="x", labelbottom=False)
     ax.grid(False)
     ax.set_xlabel("")
     ax_runoff.grid(False)
@@ -853,7 +881,7 @@ def draw_stacked_lake(lake: dict, df: pd.DataFrame) -> None:
     legend.get_frame().set_edgecolor("none")
     legend.get_frame().set_alpha(0.86)
 
-    fig.subplots_adjust(left=0.11, right=0.90, bottom=0.22, top=0.92)
+    fig.subplots_adjust(left=0.12, right=0.86, bottom=0.24, top=0.86)
     out_png = OUT_DIR / f"{lake['out_name']}.png"
     out_tif = OUT_DIR / f"{lake['out_name']}.tif"
     fig.savefig(out_png, dpi=DPI)
@@ -913,13 +941,13 @@ def main() -> None:
     for image, box in zip(images, content_boxes):
         crop_box = (
             common_left,
-            max(0, box[1] - 10),
+            max(0, box[1] - 18),
             common_right,
-            min(size[1], box[3] + 10),
+            min(size[1], box[3] + 15),
         )
         cropped.append(image.crop(crop_box))
     row_width = cropped[0].width
-    row_gap = 12
+    row_gap = 2
     total_height = sum(image.height for image in cropped) + row_gap * (len(cropped) - 1)
     stacked = Image.new("RGB", (row_width, total_height), "white")
     y = 0
